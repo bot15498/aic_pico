@@ -56,14 +56,16 @@ void pn532_set_wait_loop(pn532_wait_loop_t loop)
 
 static int pn532_write(const uint8_t *data, uint8_t len)
 {
+    absolute_time_t timeout = make_timeout_time_us(IO_TIMEOUT_US * len);
     return i2c_write_blocking_until(i2c_port, PN532_I2C_ADDRESS, data, len, false,
-                             time_us_64() + IO_TIMEOUT_US * len);
+                             timeout);
 }
 
 static int pn532_read(uint8_t *data, uint8_t len)
 {
+    absolute_time_t timeout = make_timeout_time_us(IO_TIMEOUT_US * len);
     return i2c_read_blocking_until(i2c_port, PN532_I2C_ADDRESS, data, len, false,
-                            time_us_64() + IO_TIMEOUT_US * len);
+                            timeout);
 }
 
 static bool pn532_wait_ready()
